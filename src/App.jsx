@@ -8,7 +8,6 @@ import JobsPage from "./pages/JobsPage";
 import AddJobPage from "./pages/AddJobPage";
 
 
-
 const App = () => {
     const addJob = async (newJob) => {
         try {
