@@ -8,18 +8,41 @@ import JobsPage from "./pages/JobsPage";
 import AddJobPage from "./pages/AddJobPage";
 
 
- const router = createBrowserRouter(
+
+const App = () => {
+    const addJob = async (newJob) => {
+        try {
+            await fetch('http://localhost:3001/jobs', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newJob)
+            });
+        } catch (err) {
+            console.log('Error adding job', err);
+        }
+    }
+    const deleteJob = async (id) => {
+        try {
+            await fetch(`http://localhost:3001/jobs/${id}`, {
+                method: 'DELETE',
+            });
+        } catch (err) {
+            console.log('Error deleting job', err);
+        }
+    }
+    const router = createBrowserRouter(
         createRoutesFromElements(
             <Route path='/' element={<MainLayout/>}>
-            <Route index element={<HomePage/>}/>
+                <Route index element={<HomePage/>}/>
                 <Route path ='/jobs' element={<JobsPage/>}/>
-                <Route path ='/jobs/:id' element={<JobPage/>}/>
-                <Route path ='/add-job' element={<AddJobPage/>}/>
+                <Route path ='/jobs/:id' element={<JobPage/>} deleteJob={deleteJob} />
+                <Route path ='/add-job' element={<AddJobPage/>} addJobSubmit={addJob}/>
                 <Route path='*' element={<NotFoundPage/>}/>
             </Route>
         )
- );
-const App = () => {
+    );
     return (
         <RouterProvider router={router}></RouterProvider>
 );

@@ -3,11 +3,14 @@ import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import Spinner from "../components/Spinner";
+import {useNavigate} from "react-router-dom";
+import {toast} from "react-toastify";
 
-const JobPage = () => {
+const JobPage = ({deleteJob}) => {
 	const [job, setJob] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const {id} = useParams();
+	const navigate = useNavigate();
 	useEffect(() => {
 		const fetchJob = async () => {
 			try {
@@ -23,6 +26,15 @@ const JobPage = () => {
 		}
 		fetchJob();
 	}, []);
+	const onDeleteClick =  (id) => {
+		const confirmDelete = window.confirm('Are you sure you want to delete this job?');
+		if (!confirmDelete) {
+			return;
+		}
+		deleteJob(id);
+		toast.success('Job deleted successfully');
+		navigate('/jobs');
+	}
 	return ( loading ? <Spinner loading={loading} /> :
 	<>
 	<section>
@@ -102,7 +114,7 @@ const JobPage = () => {
 						>Edit Job</Link
 						>
 						<button
-							className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+							className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block" onClick={() => onDeleteClick(job.id)}
 						>
 							Delete Job
 						</button>
